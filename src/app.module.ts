@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+// import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         entities: ['dist/**/*.entity{.js,.ts}'],
         autoLoadEntities: true,
         synchronize: true,
+        extra: { connectionLimit: 5 },
       }),
       inject: [ConfigService],
     }),
