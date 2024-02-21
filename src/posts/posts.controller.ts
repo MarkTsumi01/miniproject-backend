@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { createPost } from './dto/createPost.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postService: PostsService) {}
@@ -10,6 +11,7 @@ export class PostsController {
     return this.postService.createPosts(createPost);
   }
 
+  @UseGuards(AuthGuard)
   @Get('/allposts')
   async getAllpost() {
     return this.postService.allPosts();

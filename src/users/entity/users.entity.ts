@@ -8,7 +8,7 @@ export class Users {
   id: number;
 
   @Column({ length: 255 })
-  wallet_address: string;
+  walletAddress: string;
 
   @Column({ length: 30, nullable: true })
   fullname: string;
