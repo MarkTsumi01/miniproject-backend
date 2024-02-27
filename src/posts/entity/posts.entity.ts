@@ -13,14 +13,14 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 30 })
+  @Column({ length: 255 })
   title: string;
 
   @Column({ length: 255 })
   body: string;
 
   @Column({ length: 255, nullable: true })
-  img_url: string;
+  imagePath: string;
 
   @ManyToOne(() => Users, (user) => user.posts)
   user: Users;

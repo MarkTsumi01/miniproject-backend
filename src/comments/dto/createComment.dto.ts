@@ -5,8 +5,5 @@ export class createComment {
   commentText: string;
 
   @IsNumber()
-  userId: number;
-
-  @IsNumber()
   postId: number;
 }

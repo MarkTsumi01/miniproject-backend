@@ -14,10 +14,10 @@ export class PostsService {
     private userRepository: Repository<Users>,
   ) {}
 
-  async createPosts(post: createPost): Promise<Post> {
+  async createPosts(userId: number, post: createPost): Promise<{ id: number }> {
     const user = await this.userRepository.findOne({
       where: {
-        id: post.userId,
+        id: userId,
       },
     });
 
@@ -28,10 +28,23 @@ export class PostsService {
     const newPost = new Post();
     newPost.title = post.title;
     newPost.body = post.body;
-    newPost.img_url = post.img_url;
     newPost.user = user;
 
-    return await this.postRepository.save(newPost);
+    const savedPost = await this.postRepository.save(newPost);
+    const postId = savedPost.id;
+
+    return { id: postId };
+  }
+
+  async saveImagePath(postId: number, imagePath: string): Promise<void> {
+    const post = await this.postRepository.findOneBy({
+      id: postId,
+    });
+    if (!post) {
+      throw new Error('Post not found');
+    }
+    post.imagePath = imagePath;
+    await this.postRepository.save(post);
   }
 
   async allPosts(): Promise<Post[]> {

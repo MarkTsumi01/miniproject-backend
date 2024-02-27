@@ -13,6 +13,8 @@ export class AuthController {
 
   @Post('/login')
   login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto.signatures);
+    const result = this.authService.login(loginDto.signatures);
+
+    return result;
   }
 }

@@ -6,8 +6,9 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-// import { AuthModule } from './auth/auth.module';
 import { AuthModule } from './auth/auth.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -15,6 +16,9 @@ import { AuthModule } from './auth/auth.module';
     PostsModule,
     CommentsModule,
     ConfigModule.forRoot(),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'images'),
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -27,7 +31,7 @@ import { AuthModule } from './auth/auth.module';
         entities: ['dist/**/*.entity{.js,.ts}'],
         autoLoadEntities: true,
         synchronize: true,
-        extra: { connectionLimit: 5 },
+        // extra: { connectionLimit: 5 },
       }),
       inject: [ConfigService],
     }),

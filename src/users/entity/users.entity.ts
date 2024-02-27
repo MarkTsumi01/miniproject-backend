@@ -20,7 +20,7 @@ export class Users {
   role: string;
 
   @Column({ length: 255, nullable: true })
-  img_url: string;
+  imagePath: string;
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
