@@ -17,14 +17,13 @@ export class CommentsService {
     private postRepository: Repository<Post>,
   ) {}
 
-  // async createComment(comments: createComment): Promise<Comment> {
-  //   return await this.commentRepository.save(comments);
-  // }
-
-  async createComment(comments: createComment): Promise<Comment> {
+  async createComment(
+    comments: createComment,
+    userId: number,
+  ): Promise<Comment> {
     const user = await this.userRepository.findOne({
       where: {
-        id: comments.userId,
+        id: userId,
       },
     });
 
@@ -44,5 +43,16 @@ export class CommentsService {
     newComment.user = user;
 
     return await this.commentRepository.save(newComment);
+  }
+
+  async findbyPostId(postId: number): Promise<Comment> {
+    return await this.commentRepository.findOne({
+      where: {
+        post: { id: postId },
+      },
+      relations: {
+        user: true,
+      },
+    });
   }
 }

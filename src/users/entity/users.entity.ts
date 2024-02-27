@@ -8,7 +8,7 @@ export class Users {
   id: number;
 
   @Column({ length: 255 })
-  wallet_address: string;
+  walletAddress: string;
 
   @Column({ length: 30, nullable: true })
   fullname: string;
@@ -20,7 +20,7 @@ export class Users {
   role: string;
 
   @Column({ length: 255, nullable: true })
-  img_url: string;
+  imagePath: string;
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];

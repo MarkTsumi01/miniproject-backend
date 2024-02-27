@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entity/users.entity';
-import { Equal, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { createUsers } from './dto/createUser.dto';
 import { updateUser } from './dto/updateUser.dto';
 
@@ -12,31 +12,41 @@ export class UsersService {
     private readonly userRepository: Repository<Users>,
   ) {}
 
-  async createUser(
-    user: createUsers,
-  ): Promise<{ user: Users; message: string }> {
-    const existingUser = await this.userRepository.findOne({
-      where: { wallet_address: Equal(user.wallet_address) },
-    });
-
-    if (existingUser) {
-      return { user: existingUser, message: 'the user already in database' };
-    } else {
-      const newUser = await this.userRepository.save(user);
-      return { user: newUser, message: 'create new user' };
-    }
+  async createUser(user: createUsers) {
+    return await this.userRepository.save(user);
   }
 
-  async updateUser(update: updateUser) {
-    const { wallet_address, ...updatedata } = update;
-    return await this.userRepository.update({ wallet_address }, updatedata);
+  async updateUser(update: updateUser, walletAddress: string) {
+    return await this.userRepository.update({ walletAddress }, update);
   }
 
-  async findbyID(id: number): Promise<Users> {
+  async findbyID(walletAddress: string): Promise<Users> {
     return await this.userRepository.findOne({
       where: {
-        id: id,
+        walletAddress: walletAddress,
+      },
+      relations: {
+        posts: true,
       },
     });
+  }
+
+  async findbyAddress(walletAddress: string): Promise<Users> {
+    return await this.userRepository.findOne({
+      where: {
+        walletAddress: walletAddress,
+      },
+    });
+  }
+
+  async saveImagePath(walletAddress: string, imagePath: string): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: { walletAddress: walletAddress },
+    });
+
+    if (user) {
+      user.imagePath = imagePath;
+      await this.userRepository.update({ walletAddress }, user);
+    }
   }
 }
